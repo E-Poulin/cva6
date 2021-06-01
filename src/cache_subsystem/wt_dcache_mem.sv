@@ -161,7 +161,7 @@ module wt_dcache_mem import ariane_pkg::*; import wt_cache_pkg::*; #(
     bank_idx = '{default:wr_idx_i};
 
     for(int k=0; k<NumPorts; k++) begin
-       bank_collision[k] = rd_off_i[k][DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1] == wr_off_i[DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1];
+      bank_collision[k] = rd_off_i[k][DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1] == wr_off_i[DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1];
     end
 
     if(wr_cl_vld_i & |wr_cl_we_i) begin
