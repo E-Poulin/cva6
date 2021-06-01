@@ -161,7 +161,7 @@ module wt_dcache_mem import ariane_pkg::*; import wt_cache_pkg::*; #(
     bank_idx = '{default:wr_idx_i};
 
     for(int k=0; k<NumPorts; k++) begin
-      bank_collision[k] = rd_off_i[k][DCACHE_OFFSET_WIDTH-1:3] == wr_off_i[DCACHE_OFFSET_WIDTH-1:3];
+       bank_collision[k] = rd_off_i[k][DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1] == wr_off_i[DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1];
     end
 
     if(wr_cl_vld_i & |wr_cl_we_i) begin
@@ -171,16 +171,16 @@ module wt_dcache_mem import ariane_pkg::*; import wt_cache_pkg::*; #(
     end else begin
       if(rd_acked) begin
         if(!rd_tag_only_i[vld_sel_d]) begin
-          bank_req                                               = dcache_cl_bin2oh(rd_off_i[vld_sel_d][DCACHE_OFFSET_WIDTH-1:3]);
-          bank_idx[rd_off_i[vld_sel_d][DCACHE_OFFSET_WIDTH-1:3]] = rd_idx_i[vld_sel_d];
+          bank_req                                               = dcache_cl_bin2oh(rd_off_i[vld_sel_d][DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1]);
+          bank_idx[rd_off_i[vld_sel_d][DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1]] = rd_idx_i[vld_sel_d];
         end
       end
 
       if(|wr_req_i) begin
         if(rd_tag_only_i[vld_sel_d] || !(rd_ack_o[vld_sel_d] && bank_collision[vld_sel_d])) begin
           wr_ack_o = 1'b1;
-          bank_req |= dcache_cl_bin2oh(wr_off_i[DCACHE_OFFSET_WIDTH-1:3]);
-          bank_we   = dcache_cl_bin2oh(wr_off_i[DCACHE_OFFSET_WIDTH-1:3]);
+          bank_req |= dcache_cl_bin2oh(wr_off_i[DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1]);
+          bank_we   = dcache_cl_bin2oh(wr_off_i[DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1]);
         end
       end
     end
@@ -204,7 +204,7 @@ module wt_dcache_mem import ariane_pkg::*; import wt_cache_pkg::*; #(
     // tag comparison of ways >0
     assign rd_hit_oh_o[i] = (rd_tag == tag_rdata[i]) & rd_vld_bits_o[i]  & cmp_en_q;
     // byte offset mux of ways >0
-    assign rdata_cl[i] = bank_rdata[bank_off_q[DCACHE_OFFSET_WIDTH-1:3]][i];
+	assign rdata_cl[i] = bank_rdata[bank_off_q[DCACHE_OFFSET_WIDTH-1:DCACHE_OFFSET_WIDTH-1]][i];
   end
 
   for(genvar k=0; k<DCACHE_WBUF_DEPTH; k++) begin : gen_wbuffer_hit
